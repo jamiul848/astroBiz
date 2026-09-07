@@ -1,0 +1,42 @@
+.services-page { background: var(--bg-secondary); }
+.services-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-6); padding: var(--space-8) var(--content-padding) var(--space-6); }
+.services-header h1 { margin: 0; font-size: var(--font-size-3xl); line-height: var(--line-height-tight); }
+.service-eyebrow { margin-bottom: var(--space-2); color: var(--color-accent-dark); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); letter-spacing: .08em; text-transform: uppercase; }
+.service-subtitle { margin-top: var(--space-2); color: var(--text-secondary); font-size: var(--font-size-sm); }
+.services-content { width: 100%; max-width: var(--page-max-width); margin: 0 auto; }
+.service-list-table { table-layout: fixed; }
+.service-list-table th:first-child, .service-list-table td:first-child { width: 20%; }
+.service-list-table th:nth-child(2), .service-list-table td:nth-child(2) { width: 29%; }
+.service-list-table th:nth-child(3), .service-list-table td:nth-child(3) { width: 12%; }
+.service-list-table th:nth-child(4), .service-list-table td:nth-child(4) { width: 12%; }
+.service-list-table th:nth-child(5), .service-list-table td:nth-child(5) { width: 12%; }
+.service-list-table th:last-child, .service-list-table td:last-child { width: 15%; }
+.service-list-table td { vertical-align: middle; }
+.service-description-cell { overflow: hidden; color: var(--text-secondary) !important; text-overflow: ellipsis; white-space: nowrap; }
+.service-name-cell strong { overflow: hidden; display: block; text-overflow: ellipsis; white-space: nowrap; }
+.service-row-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.services-loading { min-height: 300px; }
+.service-form { display: flex; flex-direction: column; gap: var(--space-4); }
+.service-form .form-group { margin-bottom: 0; }
+.service-form-section-title { padding-top: var(--space-2); font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); }
+.service-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.service-description { min-height: 100px; }
+.service-form-error { min-height: 20px; color: var(--color-danger); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
+.service-form-actions { display: flex; justify-content: flex-end; gap: var(--space-3); }
+.service-details { display: flex; flex-direction: column; gap: var(--space-6); }
+.service-details-summary { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: var(--bg-primary); }
+.service-details-heading { flex: 1; min-width: 0; }
+.service-details-heading h2 { font-size: var(--font-size-xl); }
+.service-details-heading > p:not(.service-eyebrow) { margin-top: var(--space-1); color: var(--text-secondary); font-size: var(--font-size-sm); }
+.service-details-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); }
+.service-details-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 1fr); gap: var(--space-5); }
+.service-detail-card { min-width: 0; }
+.service-detail-card .card-header { padding: 0 0 var(--space-4); margin: 0 0 var(--space-4); }
+.service-detail-card .card-body { padding: 0; }
+.service-info-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
+.service-detail-item { display: flex; flex-direction: column; min-width: 0; gap: var(--space-1); }
+.service-detail-item span { color: var(--text-tertiary); font-size: var(--font-size-xs); }
+.service-detail-item strong { overflow-wrap: anywhere; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.service-detail-description { color: var(--text-secondary); font-size: var(--font-size-sm); line-height: var(--line-height-relaxed); }
+@media (max-width: 1120px) { .service-list-table th:nth-child(2), .service-list-table td:nth-child(2) { width: 24%; } .service-list-table th:last-child, .service-list-table td:last-child { width: 20%; } }
+@media (max-width: 800px) { .services-header { align-items: flex-start; flex-direction: column; } .service-list-table { min-width: 760px; } .service-form-grid, .service-details-grid { grid-template-columns: minmax(0, 1fr); } .service-details-summary { align-items: flex-start; flex-wrap: wrap; } .service-details-actions { width: 100%; justify-content: flex-start; } }

@@ -1,0 +1,15 @@
+import { StatusBadge } from '../../../shared/components/Badge.js';
+import { Button } from '../../../shared/components/Button.js';
+import { Card } from '../../../shared/components/Card.js';
+import { Toast } from '../../../shared/components/States.js';
+import { InvoicePreview } from './InvoicePreview.js';
+
+const statusTypes = { Paid: 'success', Pending: 'warning', 'Partially Paid': 'primary', Overdue: 'danger' };
+const formatCurrency = (value) => `Rs ${value.toLocaleString('en-IN')}`;
+
+export function InvoiceDetails({ invoice, onBack, onEdit }) {
+  const content = document.createElement('div'); content.className = 'invoice-details';
+  const summary = document.createElement('div'); summary.className = 'invoice-details-summary'; const heading = document.createElement('div'); heading.className = 'invoice-details-heading'; heading.innerHTML = `<p class="billing-eyebrow">Invoice detail</p><h2>${invoice.invoiceNumber}</h2><p>${invoice.customer?.name || 'Customer'} · ${invoice.service?.name || 'Service'}</p>`; summary.appendChild(heading); summary.appendChild(new StatusBadge({ label: invoice.paymentStatus, status: statusTypes[invoice.paymentStatus] || 'neutral' }).render()); const actions = document.createElement('div'); actions.className = 'invoice-details-actions'; actions.appendChild(new Button({ label: 'Back to invoices', variant: 'secondary', onClick: onBack }).render()); actions.appendChild(new Button({ label: 'Edit invoice', variant: 'primary', onClick: onEdit }).render()); summary.appendChild(actions); content.appendChild(summary);
+  const values = document.createElement('div'); values.className = 'invoice-detail-value-grid'; [['Invoice date', invoice.invoiceDate], ['Customer', invoice.customer?.name], ['Service', invoice.service?.name], ['Payment method', invoice.paymentMethod], ['Subtotal', formatCurrency(invoice.subtotal)], ['Discount', formatCurrency(invoice.discount)], ['Tax', formatCurrency(invoice.tax)], ['Total', formatCurrency(invoice.total)]].forEach(([label, value]) => { const item = document.createElement('div'); item.className = 'invoice-detail-value'; item.innerHTML = `<span>${label}</span><strong>${value || 'Not provided'}</strong>`; values.appendChild(item); }); content.appendChild(new Card({ title: 'Invoice information', content: values, className: 'billing-panel invoice-info-card' }).render());
+  const previewActions = document.createElement('div'); previewActions.className = 'invoice-preview-actions'; previewActions.appendChild(new Button({ label: 'Print', variant: 'secondary', onClick: () => Toast.info('Print preview is ready for the invoice. Use the Tauri print command when connected.') }).render()); previewActions.appendChild(new Button({ label: 'Download PDF', variant: 'primary', onClick: () => Toast.info('PDF download will be available when reporting is connected.') }).render()); const previewWrapper = document.createElement('div'); previewWrapper.className = 'invoice-preview-wrapper'; previewWrapper.appendChild(previewActions); previewWrapper.appendChild(InvoicePreview({ invoice })); content.appendChild(previewWrapper); return content;
+}
