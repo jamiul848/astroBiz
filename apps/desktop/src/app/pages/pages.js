@@ -1,151 +1,48 @@
-/**
- * Dashboard Page (Placeholder)
- */
-export function dashboardPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
+import { Dashboard } from '../dashboard/Dashboard.js';
+import { Customers } from '../customers/Customers.js';
+import { Kundalis } from '../kundalis/Kundalis.js';
+import { Appointments } from '../appointments/Appointments.js';
+import { Services } from '../services/Services.js';
+import { Billing } from '../billing/Billing.js';
 
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Dashboard</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Overview of your astrology business</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Dashboard Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The dashboard will display:</p>
-        <ul>
-          <li>Today's revenue</li>
-          <li>Total customers</li>
-          <li>Today's appointments</li>
-          <li>Pending payments</li>
-          <li>Upcoming appointments</li>
-          <li>Recent customers</li>
-          <li>Follow-ups due</li>
-          <li>Quick actions (Add Customer, Generate Kundali, New Appointment, Create Invoice)</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+function defaultNavigation(path, state) {
+  if (typeof window !== 'undefined' && window.appRouter) {
+    return window.appRouter.navigate(path, state);
+  }
+  return false;
 }
 
-/**
- * Customers Page (Placeholder)
- */
-export function customersPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Customers</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Manage your customer database</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Customer Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The Customers module will allow you to:</p>
-        <ul>
-          <li>View all customers with their details</li>
-          <li>Search and filter customers by status</li>
-          <li>Add new customers</li>
-          <li>Edit customer information</li>
-          <li>View customer profiles with birth details, appointments, and invoices</li>
-          <li>Track customer status (New, Active, Follow-up, Inactive, VIP)</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+export function dashboardPage({ onNavigate = defaultNavigation } = {}) {
+  return Dashboard({
+    onNavigate: (path, state) => onNavigate(path, state),
+  });
 }
 
-/**
- * Kundalis Page (Placeholder)
- */
-export function kundalisPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Kundalis</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Generate and manage Kundali charts</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Kundali Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The Kundali module will display:</p>
-        <ul>
-          <li>Customer information and birth details</li>
-          <li>Kundali birth charts</li>
-          <li>Planetary positions</li>
-          <li>Dasha information</li>
-          <li>Nakshatra data</li>
-          <li>Dosha information</li>
-          <li>Saved reports</li>
-          <li>PDF download functionality</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will use mock astrology data for the prototype. Astronomical calculations will be handled by the backend API.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+export function customersPage({ onNavigate = defaultNavigation } = {}) {
+  return Customers({
+    onNavigate: (path, state) => onNavigate(path, state),
+  });
 }
 
-/**
- * Appointments Page (Placeholder)
- */
+export function kundalisPage({ customerId = null, onNavigate = defaultNavigation } = {}) {
+  return Kundalis({
+    customerId,
+    onNavigate: (path, state) => onNavigate(path, state),
+  });
+}
+
 export function appointmentsPage() {
   return Appointments();
 }
 
-/**
- * Services Page (Placeholder)
- */
 export function servicesPage() {
   return Services();
 }
 
-/**
- * Billing Page (Placeholder)
- */
 export function billingPage() {
   return Billing();
 }
 
-/**
- * CRM Page (Placeholder)
- */
 export function crmPage() {
   const page = document.createElement('div');
   page.className = 'page';
@@ -185,9 +82,6 @@ export function crmPage() {
   return page;
 }
 
-/**
- * Reports Page (Placeholder)
- */
 export function reportsPage() {
   const page = document.createElement('div');
   page.className = 'page';
@@ -227,9 +121,6 @@ export function reportsPage() {
   return page;
 }
 
-/**
- * Settings Page (Placeholder)
- */
 export function settingsPage() {
   const page = document.createElement('div');
   page.className = 'page';

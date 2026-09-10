@@ -6,6 +6,7 @@ export class Router {
   constructor(options = {}) {
     this.routes = new Map();
     this.currentRoute = null;
+    this.currentRouteState = null;
     this.onRouteChange = options.onRouteChange || (() => {});
     this.defaultRoute = options.defaultRoute || 'dashboard';
     this.rootSelector = options.rootSelector || '#workspace';
@@ -23,18 +24,20 @@ export class Router {
   /**
    * Navigate to a route
    */
-  navigate(path) {
+  navigate(path, state = {}) {
     if (!this.routes.has(path)) {
       console.warn(`Route not found: ${path}`);
       return false;
     }
 
     this.currentRoute = path;
+    this.currentRouteState = state;
     this.root.innerHTML = '';
-    
+
     const handler = this.routes.get(path);
-    const content = handler();
-    
+    const normalizedState = typeof state === 'object' && state !== null ? state : { customerId: state };
+    const content = handler(normalizedState);
+
     if (content instanceof HTMLElement) {
       this.root.appendChild(content);
     } else if (typeof content === 'string') {
@@ -50,6 +53,13 @@ export class Router {
    */
   getCurrentRoute() {
     return this.currentRoute;
+  }
+
+  /**
+   * Get current route state
+   */
+  getCurrentRouteState() {
+    return this.currentRouteState;
   }
 
   /**

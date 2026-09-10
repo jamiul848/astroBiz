@@ -26,6 +26,7 @@ class App {
       rootSelector: '#workspace',
       onRouteChange: (route) => this.onRouteChanged(route),
     });
+    window.appRouter = this.router;
     this.init();
   }
 
@@ -36,17 +37,26 @@ class App {
   }
 
   setupRouter() {
+    const navigate = (path, state) => this.router.navigate(path, state);
+
     // Register all routes
     this.router
-      .register('dashboard', () => dashboardPage())
-      .register('customers', () => customersPage())
-      .register('kundalis', () => kundalisPage())
-      .register('appointments', () => appointmentsPage())
-      .register('services', () => servicesPage())
-      .register('billing', () => billingPage())
-      .register('crm', () => crmPage())
-      .register('reports', () => reportsPage())
-      .register('settings', () => settingsPage());
+      .register('dashboard', (state) => dashboardPage({
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('customers', (state) => customersPage({
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('kundalis', (state) => kundalisPage({
+        customerId: state?.customerId ?? state ?? null,
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('appointments', (state) => appointmentsPage())
+      .register('services', (state) => servicesPage())
+      .register('billing', (state) => billingPage())
+      .register('crm', (state) => crmPage())
+      .register('reports', (state) => reportsPage())
+      .register('settings', (state) => settingsPage());
   }
 
   setupShell() {
