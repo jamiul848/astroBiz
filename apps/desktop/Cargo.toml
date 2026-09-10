@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "AstroBiz OS - Desktop Application"
 authors = ["AstroBiz Team"]
 edition = "2021"
+build = "src-tauri/build.rs"
 
 [lib]
 name = "astrobiz_desktop_lib"

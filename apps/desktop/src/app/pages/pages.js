@@ -4,6 +4,7 @@ import { Kundalis } from '../kundalis/Kundalis.js';
 import { Appointments } from '../appointments/Appointments.js';
 import { Services } from '../services/Services.js';
 import { Billing } from '../billing/Billing.js';
+import { CRM } from '../crm/CRM.js';
 
 function defaultNavigation(path, state) {
   if (typeof window !== 'undefined' && window.appRouter) {
@@ -43,43 +44,10 @@ export function billingPage() {
   return Billing();
 }
 
-export function crmPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">CRM & Follow-ups</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Track customer interactions and follow-ups</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">CRM Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The CRM module will provide:</p>
-        <ul>
-          <li>Customer notes and timeline</li>
-          <li>Follow-up date scheduling</li>
-          <li>Customer status tracking</li>
-          <li>Recent interaction history</li>
-          <li>Follow-up statuses (Today, Upcoming, Completed, Overdue)</li>
-          <li>Timeline view of customer interactions</li>
-          <li>Notification reminders for follow-ups</li>
-          <li>Bulk follow-up management</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+export function crmPage({ onNavigate = defaultNavigation } = {}) {
+  return CRM({
+    onNavigate: (path, state) => onNavigate(path, state),
+  });
 }
 
 export function reportsPage() {
