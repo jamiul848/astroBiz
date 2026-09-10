@@ -7,7 +7,7 @@ export class Topbar {
     this.title = options.title || 'AstroBiz OS';
     this.actions = options.actions || []; // [{ label: 'Action', onClick: () => {} }, ...]
     this.showSearch = options.showSearch !== false;
-    this.onSearch = options.onSearch || (() => {});
+    this.onSearch = options.onSearch || (() => { });
   }
 
   render() {

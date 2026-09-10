@@ -6,7 +6,7 @@ export class Sidebar {
   constructor(options = {}) {
     this.items = options.items || []; // [{ icon: '📊', label: 'Dashboard', path: '/dashboard' }, ...]
     this.activeItem = options.activeItem || this.items[0]?.path || '';
-    this.onNavigate = options.onNavigate || (() => {});
+    this.onNavigate = options.onNavigate || (() => { });
   }
 
   render() {

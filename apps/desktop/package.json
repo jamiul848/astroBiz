@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tauri dev",
+    "frontend:dev": "vite",
     "build": "tauri build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit"

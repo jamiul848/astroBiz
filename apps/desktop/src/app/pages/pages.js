@@ -126,124 +126,21 @@ export function kundalisPage() {
  * Appointments Page (Placeholder)
  */
 export function appointmentsPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Appointments</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Schedule and manage consultations</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Appointment Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The Appointments module will provide:</p>
-        <ul>
-          <li>Calendar view (Day, Week, Month)</li>
-          <li>Schedule appointments with customers</li>
-          <li>Set date, start time, and end time</li>
-          <li>Track appointment status (Pending, Confirmed, Completed, Cancelled, No Show)</li>
-          <li>Link appointments to services</li>
-          <li>Add notes to appointments</li>
-          <li>View upcoming appointments</li>
-          <li>Automatic invoice generation from appointments</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+  return Appointments();
 }
 
 /**
  * Services Page (Placeholder)
  */
 export function servicesPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Services</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Define and manage your services</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Services Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The Services module will allow you to:</p>
-        <ul>
-          <li>Create and manage service offerings</li>
-          <li>Set service names and descriptions</li>
-          <li>Define pricing for each service</li>
-          <li>Set service duration</li>
-          <li>Mark services as active or inactive</li>
-          <li>Example services: Kundali Reading, Marriage Consultation, Career Consultation, Full Horoscope</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+  return Services();
 }
 
 /**
  * Billing Page (Placeholder)
  */
 export function billingPage() {
-  const page = document.createElement('div');
-  page.className = 'page';
-
-  const header = document.createElement('div');
-  header.className = 'page-header';
-  header.innerHTML = '<h1 style="margin: 0;">Billing & Invoices</h1><p style="margin: var(--space-2) 0 0 0; color: var(--text-secondary);">Manage invoices and payments</p>';
-
-  const content = document.createElement('div');
-  content.className = 'page-content';
-  content.innerHTML = `
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Billing Management Coming Soon</h3>
-      </div>
-      <div class="card-body">
-        <p>The Billing module will include:</p>
-        <ul>
-          <li>Invoice list and details</li>
-          <li>Customer and service information on invoices</li>
-          <li>Subtotal, discount, tax, and total calculations</li>
-          <li>Payment status tracking</li>
-          <li>Multiple payment methods (UPI, Cash, Bank Transfer, Other)</li>
-          <li>Invoice date and number management</li>
-          <li>Create new invoices</li>
-          <li>Track pending and completed payments</li>
-        </ul>
-        <p style="margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--font-size-sm);">
-          This module will be implemented in the next phase.
-        </p>
-      </div>
-    </div>
-  `;
-
-  page.appendChild(header);
-  page.appendChild(content);
-  return page;
+  return Billing();
 }
 
 /**

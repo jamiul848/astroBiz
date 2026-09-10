@@ -6,7 +6,7 @@ export class Modal {
   constructor(options = {}) {
     this.title = options.title || 'Modal';
     this.content = options.content || '';
-    this.onClose = options.onClose || (() => {});
+    this.onClose = options.onClose || (() => { });
     this.size = options.size || 'md'; // sm, md, lg
     this.className = options.className || '';
     this.footer = options.footer || null;
@@ -98,8 +98,8 @@ export class ConfirmDialog {
     this.message = options.message || 'Are you sure?';
     this.confirmLabel = options.confirmLabel || 'Confirm';
     this.cancelLabel = options.cancelLabel || 'Cancel';
-    this.onConfirm = options.onConfirm || (() => {});
-    this.onCancel = options.onCancel || (() => {});
+    this.onConfirm = options.onConfirm || (() => { });
+    this.onCancel = options.onCancel || (() => { });
   }
 
   show() {

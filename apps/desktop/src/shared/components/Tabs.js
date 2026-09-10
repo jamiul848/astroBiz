@@ -6,7 +6,7 @@ export class Tabs {
   constructor(options = {}) {
     this.tabs = options.tabs || []; // [{ id: 'tab1', label: 'Tab 1', content: 'Content 1' }, ...]
     this.activeTab = options.activeTab || this.tabs[0]?.id || '';
-    this.onChange = options.onChange || (() => {});
+    this.onChange = options.onChange || (() => { });
     this.className = options.className || '';
   }
 
