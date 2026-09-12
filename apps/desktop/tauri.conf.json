@@ -6,7 +6,7 @@
     "beforeDevCommand": "npm run frontend:dev",
     "beforeBuildCommand": "npx vite build",
     "devUrl": "http://localhost:5173",
-    "frontendDist": "../dist"
+    "frontendDist": "dist"
   },
   "app": {
     "windows": [
