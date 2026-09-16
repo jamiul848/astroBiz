@@ -1,43 +1,74 @@
-import { Avatar, StatusBadge } from '../../../shared/components/Badge.js';
+import { StatusBadge } from '../../../shared/components/Badge.js';
 import { Card } from '../../../shared/components/Card.js';
 import { EmptyState } from '../../../shared/components/States.js';
-import { followUps } from '../../../data/mock/dashboardData.js';
 
-export function FollowUps() {
-  const list = document.createElement('div');
-  list.className = 'dashboard-follow-up-list';
+export async function FollowUps(repo) {
+  let content = document.createElement('div');
 
-  if (!followUps.length) {
-    list.appendChild(new EmptyState({
-      icon: '✓',
-      title: 'No follow-ups due',
-      message: 'You are all caught up for now.',
-      className: 'dashboard-empty-state',
-    }).render());
-  } else {
-    followUps.forEach((followUp) => {
-      const row = document.createElement('div');
-      row.className = 'dashboard-follow-up-row';
-      row.appendChild(new Avatar({ name: followUp.customer, size: 'sm', color: followUp.avatarColor }).render());
+  try {
+    const [followUps, customers] = await Promise.all([
+      repo.getFollowUps(),
+      repo.getCustomers()
+    ]);
 
-      const details = document.createElement('div');
-      details.className = 'dashboard-follow-up-details';
-      details.innerHTML = `<strong>${followUp.customer}</strong><span>${followUp.reason}</span>`;
-      row.appendChild(details);
+    const priorityMap = {
+      'High': 'danger',
+      'Medium': 'warning',
+      'Low': 'neutral',
+    };
 
-      const due = document.createElement('span');
-      due.className = 'dashboard-follow-up-due';
-      due.textContent = followUp.due;
-      row.appendChild(due);
+    const pendingFollowUps = followUps
+      .filter(f => f.status !== 'Completed')
+      .slice(0, 3); // show top 3
 
-      row.appendChild(new StatusBadge({ label: followUp.priority, status: followUp.priorityType }).render());
-      list.appendChild(row);
-    });
+    if (!pendingFollowUps.length) {
+      content = new EmptyState({
+        icon: '✓',
+        title: 'No follow-ups due',
+        message: 'You are all caught up for now.',
+        className: 'dashboard-empty-state',
+      }).render();
+    } else {
+      const table = document.createElement('table');
+      table.className = 'dashboard-dense-table';
+      
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr>
+          <th>Customer</th>
+          <th>Follow-up</th>
+          <th>Priority</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+      
+      const tbody = document.createElement('tbody');
+      pendingFollowUps.forEach((followUp) => {
+        const priorityType = priorityMap[followUp.priority] || 'neutral';
+        const tr = document.createElement('tr');
+        
+        tr.innerHTML = `
+          <td><strong>${followUp.customerName}</strong></td>
+          <td>${followUp.title}</td>
+        `;
+        
+        const tdPriority = document.createElement('td');
+        tdPriority.appendChild(new StatusBadge({ label: followUp.priority, status: priorityType }).render());
+        tr.appendChild(tdPriority);
+        
+        tbody.appendChild(tr);
+      });
+      
+      table.appendChild(tbody);
+      content.appendChild(table);
+    }
+  } catch (err) {
+    content.textContent = 'Failed to load follow-ups.';
   }
 
   return new Card({
     title: 'Follow-ups Due',
-    content: list,
+    content,
     className: 'dashboard-panel dashboard-panel-follow-ups',
   }).render();
 }

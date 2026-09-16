@@ -3,29 +3,54 @@ import { FollowUps } from './components/FollowUps.js';
 import { QuickActions } from './components/QuickActions.js';
 import { RecentCustomers } from './components/RecentCustomers.js';
 import { UpcomingAppointments } from './components/UpcomingAppointments.js';
+import { BusinessSummary } from './components/BusinessSummary.js';
+import { PendingPayments } from './components/PendingPayments.js';
 import { LoadingState } from '../../shared/components/States.js';
+import { AstroBizMockRepository } from '../shared/repositories/AstroBizMockRepository.js';
 
-function renderDashboardContent(content, onNavigate) {
+async function renderDashboardContent(content, onNavigate) {
   content.replaceChildren(new LoadingState({
     message: 'Preparing your daily overview...',
     className: 'dashboard-loading',
   }).render());
 
-  window.setTimeout(() => {
-    content.replaceChildren(DashboardStats());
+  const repo = new AstroBizMockRepository();
 
-    const mainGrid = document.createElement('div');
-    mainGrid.className = 'dashboard-main-grid';
-    mainGrid.appendChild(UpcomingAppointments());
-    mainGrid.appendChild(FollowUps());
-    content.appendChild(mainGrid);
+  try {
+    const statsNode = await DashboardStats(repo);
+    const appointmentsNode = await UpcomingAppointments(repo);
+    const followUpsNode = await FollowUps(repo);
+    const customersNode = await RecentCustomers(repo);
+    const summaryNode = await BusinessSummary(repo);
+    const pendingNode = await PendingPayments(repo);
 
-    const lowerGrid = document.createElement('div');
-    lowerGrid.className = 'dashboard-lower-grid';
-    lowerGrid.appendChild(RecentCustomers());
-    lowerGrid.appendChild(QuickActions({ onNavigate }));
-    content.appendChild(lowerGrid);
-  }, 300);
+    content.replaceChildren(QuickActions({ onNavigate }));
+    content.appendChild(statsNode);
+
+    const splitGrid = document.createElement('div');
+    splitGrid.className = 'dashboard-split-grid';
+    
+    const leftCol = document.createElement('div');
+    leftCol.className = 'dashboard-col dashboard-col-left';
+    leftCol.appendChild(summaryNode);
+    leftCol.appendChild(pendingNode);
+    leftCol.appendChild(followUpsNode);
+
+    const rightCol = document.createElement('div');
+    rightCol.className = 'dashboard-col dashboard-col-right';
+    rightCol.appendChild(appointmentsNode);
+    rightCol.appendChild(customersNode);
+
+    splitGrid.appendChild(leftCol);
+    splitGrid.appendChild(rightCol);
+    
+    content.appendChild(splitGrid);
+  } catch (err) {
+    const errorState = document.createElement('div');
+    errorState.className = 'dashboard-error';
+    errorState.textContent = 'Failed to load dashboard data.';
+    content.replaceChildren(errorState);
+  }
 }
 
 export function Dashboard({ onNavigate }) {

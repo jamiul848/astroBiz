@@ -186,13 +186,13 @@ export const astrobizMockData = {
     },
   ],
   appointments: [
-    { id: 'apt-3001', customerId: 'cus-1001', serviceId: 'svc-2', date: '2024-06-14', startTime: '10:30', endTime: '11:15', status: 'Confirmed', notes: 'Bring the quarterly career questions to the session.' },
-    { id: 'apt-3002', customerId: 'cus-1002', serviceId: 'svc-1', date: '2024-06-14', startTime: '13:00', endTime: '14:00', status: 'Pending', notes: 'First consultation.' },
-    { id: 'apt-3003', customerId: 'cus-1003', serviceId: 'svc-3', date: '2024-06-15', startTime: '11:15', endTime: '12:15', status: 'Confirmed', notes: 'Follow-up consultation.' },
-    { id: 'apt-3004', customerId: 'cus-1004', serviceId: 'svc-4', date: '2024-06-17', startTime: '09:00', endTime: '10:30', status: 'Completed', notes: 'Review the written report together.' },
-    { id: 'apt-3005', customerId: 'cus-1005', serviceId: 'svc-4', date: '2024-06-19', startTime: '15:30', endTime: '17:00', status: 'Cancelled', notes: 'Client requested a later date.' },
-    { id: 'apt-3006', customerId: 'cus-1006', serviceId: 'svc-2', date: '2024-06-21', startTime: '16:00', endTime: '16:45', status: 'No Show', notes: 'Reschedule requested.' },
-    { id: 'apt-3007', customerId: 'cus-1001', serviceId: 'svc-1', date: '2024-06-28', startTime: '11:00', endTime: '12:00', status: 'Pending', notes: 'Monthly reading.' },
+    { id: 'apt-3001', customerId: 'cus-1001', kundaliId: 'kundali-2001', serviceId: 'svc-2', date: '2024-06-14', startTime: '10:30', endTime: '11:15', status: 'Confirmed', notes: 'Bring the quarterly career questions to the session.' },
+    { id: 'apt-3002', customerId: 'cus-1002', kundaliId: null, serviceId: 'svc-1', date: '2024-06-14', startTime: '13:00', endTime: '14:00', status: 'Pending', notes: 'First consultation.' },
+    { id: 'apt-3003', customerId: 'cus-1003', kundaliId: 'kundali-2003', serviceId: 'svc-3', date: '2024-06-15', startTime: '11:15', endTime: '12:15', status: 'Confirmed', notes: 'Follow-up consultation.' },
+    { id: 'apt-3004', customerId: 'cus-1004', kundaliId: null, serviceId: 'svc-4', date: '2024-06-17', startTime: '09:00', endTime: '10:30', status: 'Completed', notes: 'Review the written report together.' },
+    { id: 'apt-3005', customerId: 'cus-1005', kundaliId: null, serviceId: 'svc-4', date: '2024-06-19', startTime: '15:30', endTime: '17:00', status: 'Cancelled', notes: 'Client requested a later date.' },
+    { id: 'apt-3006', customerId: 'cus-1006', kundaliId: null, serviceId: 'svc-2', date: '2024-06-21', startTime: '16:00', endTime: '16:45', status: 'No Show', notes: 'Reschedule requested.' },
+    { id: 'apt-3007', customerId: 'cus-1001', kundaliId: 'kundali-2002', serviceId: 'svc-1', date: '2024-06-28', startTime: '11:00', endTime: '12:00', status: 'Pending', notes: 'Monthly reading.' },
   ],
   services: [
     { id: 'svc-1', name: 'Kundali Reading', description: 'A focused reading of the birth chart and key life themes.', price: 2500, duration: 60, active: true },
@@ -207,6 +207,11 @@ export const astrobizMockData = {
     { id: 'inv-4004', invoiceNumber: 'INV-2024-004', customerId: 'cus-1004', serviceId: 'svc-4', subtotal: 3500, discount: 500, tax: 540, total: 3540, invoiceDate: '2024-06-05', paymentStatus: 'Overdue', paymentMethod: 'Other', appointmentId: 'apt-3004' },
     { id: 'inv-4005', invoiceNumber: 'INV-2024-005', customerId: 'cus-1006', serviceId: 'svc-2', subtotal: 1800, discount: 100, tax: 306, total: 2006, invoiceDate: '2024-05-28', paymentStatus: 'Paid', paymentMethod: 'UPI', appointmentId: 'apt-3006' },
     { id: 'inv-4006', invoiceNumber: 'INV-2024-006', customerId: 'cus-1005', serviceId: 'svc-1', subtotal: 2500, discount: 0, tax: 450, total: 2950, invoiceDate: '2024-06-20', paymentStatus: 'Pending', paymentMethod: 'Cash', appointmentId: null },
+  ],
+  payments: [
+    { id: 'pay-5001', invoiceId: 'inv-4001', customerId: 'cus-1001', amount: 2124, method: 'UPI', status: 'Completed', paidAt: '2024-06-14T11:30:00', reference: 'UPI-1029384756' },
+    { id: 'pay-5002', invoiceId: 'inv-4003', customerId: 'cus-1003', amount: 1000, method: 'Cash', status: 'Completed', paidAt: '2024-06-10T12:00:00', reference: 'RCPT-001' },
+    { id: 'pay-5003', invoiceId: 'inv-4005', customerId: 'cus-1006', amount: 2006, method: 'UPI', status: 'Completed', paidAt: '2024-05-28T10:15:00', reference: 'UPI-9876543210' },
   ],
   crm: {
     followUps: [

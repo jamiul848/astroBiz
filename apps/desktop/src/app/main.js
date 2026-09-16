@@ -78,17 +78,6 @@ class App {
     // Sidebar with all navigation items
     const sidebarContainer = document.getElementById('sidebar');
     const sidebar = new Sidebar({
-      items: [
-        { icon: '📊', label: 'Dashboard', path: 'dashboard' },
-        { icon: '👥', label: 'Customers', path: 'customers' },
-        { icon: '✨', label: 'Kundalis', path: 'kundalis' },
-        { icon: '📅', label: 'Appointments', path: 'appointments' },
-        { icon: '🛎️', label: 'Services', path: 'services' },
-        { icon: '💰', label: 'Billing', path: 'billing' },
-        { icon: '📞', label: 'CRM', path: 'crm' },
-        { icon: '📈', label: 'Reports', path: 'reports' },
-        { icon: '⚙️', label: 'Settings', path: 'settings' },
-      ],
       activeItem: 'dashboard',
       onNavigate: (path) => this.router.navigate(path),
     });
@@ -101,6 +90,7 @@ class App {
       showSearch: true,
       onSearch: (query) => console.log('Search:', query),
       actions: [
+        { label: '+ New', onClick: () => console.log('New action clicked') },
         { label: 'Help', onClick: () => console.log('Help clicked') },
         { label: 'Profile', onClick: () => console.log('Profile clicked') },
       ],

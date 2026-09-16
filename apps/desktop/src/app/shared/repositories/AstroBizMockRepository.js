@@ -76,6 +76,16 @@ export class AstroBizMockRepository {
     return clone(this.data.invoices.find((invoice) => invoice.id === invoiceId) || null);
   }
 
+  async getPayments() {
+    await this.simulateLatency();
+    return clone(this.data.payments);
+  }
+
+  async getPaymentsByInvoiceId(invoiceId) {
+    await this.simulateLatency();
+    return clone(this.data.payments.filter((payment) => payment.invoiceId === invoiceId));
+  }
+
   async getFollowUps() {
     await this.simulateLatency();
     return clone(this.data.crm.followUps);

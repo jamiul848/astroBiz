@@ -1,51 +1,73 @@
-import { Avatar, StatusBadge } from '../../../shared/components/Badge.js';
 import { Card } from '../../../shared/components/Card.js';
 import { EmptyState } from '../../../shared/components/States.js';
-import { upcomingAppointments } from '../../../data/mock/dashboardData.js';
 
-export function UpcomingAppointments() {
-  const list = document.createElement('div');
-  list.className = 'dashboard-appointment-list';
+export async function UpcomingAppointments(repo) {
+  let content = document.createElement('div');
 
-  if (!upcomingAppointments.length) {
-    list.appendChild(new EmptyState({
-      icon: '○',
-      title: 'No upcoming appointments',
-      message: 'Your next consultations will appear here.',
-      className: 'dashboard-empty-state',
-    }).render());
-  } else {
-    upcomingAppointments.forEach((appointment) => {
-      const row = document.createElement('div');
-      row.className = 'dashboard-appointment-row';
+  try {
+    const [appointments, customers, services] = await Promise.all([
+      repo.getAppointments(),
+      repo.getCustomers(),
+      repo.getServices(),
+    ]);
 
-      row.appendChild(new Avatar({
-        name: appointment.customer,
-        size: 'md',
-        color: appointment.avatarColor,
-      }).render());
+    const today = new Date().toISOString().split('T')[0];
+    const upcoming = appointments
+      .filter((a) => a.date >= today && (a.status === 'Confirmed' || a.status === 'Pending'))
+      .sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime))
+      .slice(0, 4);
 
-      const person = document.createElement('div');
-      person.className = 'dashboard-appointment-person';
-      person.innerHTML = `<strong>${appointment.customer}</strong><span>${appointment.service}</span>`;
-      row.appendChild(person);
+    if (!upcoming.length) {
+      content = new EmptyState({
+        icon: '○',
+        title: 'No upcoming appointments',
+        message: 'Your next consultations will appear here.',
+        className: 'dashboard-empty-state',
+      }).render();
+    } else {
+      const table = document.createElement('table');
+      table.className = 'dashboard-dense-table';
+      
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr>
+          <th>Time</th>
+          <th>Customer</th>
+          <th>Service</th>
+          <th>Status</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+      
+      const tbody = document.createElement('tbody');
+      upcoming.forEach((appointment) => {
+        const customer = customers.find((c) => c.id === appointment.customerId);
+        const service = services.find((s) => s.id === appointment.serviceId);
+        
+        const customerName = customer?.name || 'Unknown';
+        const serviceName = service?.name || 'Unknown';
+        const displayDate = appointment.date === today ? `Today, ${appointment.startTime}` : `${appointment.date} ${appointment.startTime}`;
 
-      const schedule = document.createElement('div');
-      schedule.className = 'dashboard-appointment-schedule';
-      schedule.innerHTML = `<strong>${appointment.time}</strong><span>${appointment.date}</span>`;
-      row.appendChild(schedule);
-
-      row.appendChild(new StatusBadge({
-        label: appointment.status,
-        status: appointment.statusType,
-      }).render());
-      list.appendChild(row);
-    });
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${displayDate}</td>
+          <td><strong>${customerName}</strong></td>
+          <td>${serviceName}</td>
+          <td>${appointment.status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      table.appendChild(tbody);
+      content.appendChild(table);
+    }
+  } catch (err) {
+    content.textContent = 'Failed to load upcoming appointments.';
   }
 
   return new Card({
     title: 'Upcoming Appointments',
-    content: list,
+    content,
     className: 'dashboard-panel dashboard-panel-appointments',
   }).render();
 }
