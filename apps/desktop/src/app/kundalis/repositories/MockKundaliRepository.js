@@ -1,30 +1,21 @@
-import { kundaliData } from '../../../data/mock/kundaliData.js';
+import { astroBizMockRepository } from '../../shared/repositories/AstroBizMockRepository.js';
 import { KundaliRepository } from './KundaliRepository.js';
 
-const clone = (value) => structuredClone(value);
-
 export class MockKundaliRepository extends KundaliRepository {
-  constructor(initialKundalis = kundaliData) {
+  constructor() {
     super();
-    this.kundalis = clone(initialKundalis);
-  }
-
-  async simulateLatency() {
-    await new Promise((resolve) => window.setTimeout(resolve, 180));
+    this.store = astroBizMockRepository;
   }
 
   async getAll() {
-    await this.simulateLatency();
-    return clone(this.kundalis);
+    return this.store.getKundalis();
   }
 
   async getById(id) {
-    await this.simulateLatency();
-    return clone(this.kundalis.find((kundali) => kundali.id === id) || null);
+    return this.store.getKundaliById(id);
   }
 
   async getByCustomerId(customerId) {
-    await this.simulateLatency();
-    return clone(this.kundalis.find((kundali) => kundali.customerId === customerId) || null);
+    return this.store.getKundalisByCustomerId(customerId);
   }
 }

@@ -1,18 +1,7 @@
-import { appointmentData } from '../../../data/mock/appointmentData.js';
-import { customerData } from '../../../data/mock/customerData.js';
-import { invoiceData } from '../../../data/mock/invoiceData.js';
-import { serviceData } from '../../../data/mock/serviceData.js';
+import { astroBizMockRepository } from '../../shared/repositories/AstroBizMockRepository.js';
 import { ReportsRepository } from './ReportsRepository.js';
 
 const clone = (value) => structuredClone(value);
-
-const followUpSeed = [
-  { id: 'fup-r-1', customer: 'Aarav Malhotra', detail: 'Career follow-up', dueDate: '2024-06-14', priority: 'High', status: 'Due' },
-  { id: 'fup-r-2', customer: 'Ishaan Bedi', detail: 'Written summary review', dueDate: '2024-06-16', priority: 'Medium', status: 'Pending' },
-  { id: 'fup-r-3', customer: 'Diya Kapoor', detail: 'Website inquiry response', dueDate: '2024-06-13', priority: 'High', status: 'Completed' },
-  { id: 'fup-r-4', customer: 'Mira Srinivasan', detail: 'Monthly review', dueDate: '2024-06-18', priority: 'Low', status: 'Pending' },
-  { id: 'fup-r-5', customer: 'Tara Menon', detail: 'Marriage consultation briefing', dueDate: '2024-06-17', priority: 'High', status: 'Overdue' },
-];
 
 const toDateValue = (value) => {
   if (!value) return null;
@@ -36,22 +25,29 @@ const matchRange = (value, startDate, endDate) => {
 const safeNumber = (value) => Number(value) || 0;
 
 export class MockReportsRepository extends ReportsRepository {
-  async simulateLatency() {
-    await new Promise((resolve) => window.setTimeout(resolve, 180));
+  constructor() {
+    super();
+    this.store = astroBizMockRepository;
   }
 
   async getOverview(period = 'thisMonth', range = {}) {
-    await this.simulateLatency();
+    await this.store.simulateLatency(180);
 
     const startDate = range.startDate || '2024-06-01';
     const endDate = range.endDate || '2024-06-30';
 
-    const filteredCustomers = customerData.filter((customer) => matchRange(customer.dateAdded && customer.dateAdded.replace(/\s+/g, ' '), startDate, endDate));
-    const filteredAppointments = appointmentData.filter((appointment) => matchRange(appointment.date, startDate, endDate));
-    const filteredInvoices = invoiceData.filter((invoice) => matchRange(invoice.invoiceDate, startDate, endDate));
-    const filteredFollowUps = followUpSeed.filter((item) => matchRange(item.dueDate, startDate, endDate));
+    const customers = await this.store.getCustomers();
+    const appointments = await this.store.getAppointments();
+    const invoices = await this.store.getInvoices();
+    const services = await this.store.getServices();
+    const followUps = await this.store.getFollowUps();
 
-    const serviceById = Object.fromEntries(serviceData.map((service) => [service.id, service]));
+    const filteredCustomers = customers.filter((customer) => matchRange(customer.dateAdded && customer.dateAdded.replace(/\s+/g, ' '), startDate, endDate));
+    const filteredAppointments = appointments.filter((appointment) => matchRange(appointment.date, startDate, endDate));
+    const filteredInvoices = invoices.filter((invoice) => matchRange(invoice.invoiceDate, startDate, endDate));
+    const filteredFollowUps = followUps.filter((item) => matchRange(item.dueDate, startDate, endDate));
+
+    const serviceById = Object.fromEntries(services.map((service) => [service.id, service]));
 
     const totalRevenue = filteredInvoices.reduce((sum, invoice) => sum + safeNumber(invoice.total), 0);
     const paidAmount = filteredInvoices
@@ -82,7 +78,7 @@ export class MockReportsRepository extends ReportsRepository {
       return acc;
     }, {});
 
-    const servicePerformance = serviceData.map((service) => {
+    const servicePerformance = services.map((service) => {
       const appointments = filteredAppointments.filter((appointment) => appointment.serviceId === service.id);
       const revenue = appointments.length * safeNumber(service.price);
       return {
@@ -148,7 +144,7 @@ export class MockReportsRepository extends ReportsRepository {
         rows: filteredInvoices.map((invoice) => ({
           date: invoice.invoiceDate,
           invoiceNumber: invoice.invoiceNumber,
-          customer: customerData.find((customer) => customer.id === invoice.customerId)?.name || 'Unknown customer',
+          customer: customers.find((customer) => customer.id === invoice.customerId)?.name || 'Unknown customer',
           service: serviceById[invoice.serviceId]?.name || 'Unknown service',
           amount: safeNumber(invoice.total),
           paymentStatus: invoice.paymentStatus,
@@ -178,7 +174,7 @@ export class MockReportsRepository extends ReportsRepository {
         pending: appointmentStatusCounts.Pending || 0,
         rows: filteredAppointments.map((appointment) => ({
           date: appointment.date,
-          customer: customerData.find((customer) => customer.id === appointment.customerId)?.name || 'Unknown customer',
+          customer: customers.find((customer) => customer.id === appointment.customerId)?.name || 'Unknown customer',
           service: serviceById[appointment.serviceId]?.name || 'Unknown service',
           time: `${appointment.startTime} - ${appointment.endTime}`,
           status: appointment.status,
@@ -199,8 +195,8 @@ export class MockReportsRepository extends ReportsRepository {
         cancelled: filteredFollowUps.filter((item) => item.status === 'Cancelled').length,
         overdue: filteredFollowUps.filter((item) => item.status === 'Overdue').length,
         rows: filteredFollowUps.map((item) => ({
-          customer: item.customer,
-          followUp: item.detail,
+          customer: item.customerName || item.customer,
+          followUp: item.title || item.detail,
           dueDate: item.dueDate,
           priority: item.priority,
           status: item.status,

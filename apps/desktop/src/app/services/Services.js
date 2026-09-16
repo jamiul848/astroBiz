@@ -13,11 +13,19 @@ function createServiceModal(controller, service, onComplete) {
   modal = new Modal({ title: service ? 'Edit service' : 'Add service', content: form, className: 'service-modal' }); modal.render(); modal.show();
 }
 
-export function Services() {
+export function Services({ serviceId = null, onNavigate = null } = {}) {
   const controller = new ServiceController(serviceRepository); const page = document.createElement('div'); page.className = 'page services-page';
   const header = document.createElement('header'); header.className = 'page-header services-header'; header.innerHTML = '<div><p class="service-eyebrow">Service catalog</p><h1>Services</h1><p class="service-subtitle">Shape a clear, flexible menu for every consultation you offer.</p></div>'; header.appendChild(new Button({ label: '+ Add service', variant: 'primary', onClick: () => createServiceModal(controller, null, render) }).render()); page.appendChild(header);
   const content = document.createElement('div'); content.className = 'page-content services-content'; page.appendChild(content);
   function toggleService(service) { const action = service.active ? 'Deactivate' : 'Activate'; new ConfirmDialog({ title: `${action} service`, message: `${action} ${service.name}?`, confirmLabel: action, onConfirm: async () => { await controller.setActive(service.id, !service.active); Toast.success(`Service ${service.active ? 'deactivated' : 'activated'}.`); render(); } }).show(); }
   function render() { const state = controller.state; if (state.loading) { content.replaceChildren(new LoadingState({ message: 'Loading services...', className: 'services-loading' }).render()); return; } if (state.error) { content.replaceChildren(new ErrorState({ title: 'Unable to load services', message: state.error, retry: new Button({ label: 'Try again', variant: 'secondary', onClick: () => controller.load() }) }).render()); return; } if (state.selectedService) { content.replaceChildren(ServiceDetails({ service: state.selectedService, onBack: () => controller.clearSelection(), onEdit: () => createServiceModal(controller, state.selectedService, render) })); return; } content.replaceChildren(ServiceList({ services: state.services, onSelect: (id) => controller.selectService(id), onEdit: async (id) => createServiceModal(controller, await controller.repository.getById(id), render), onToggle: toggleService })); }
-  controller.subscribe(render); render(); controller.load(); return page;
+  async function load() {
+    await controller.load();
+    if (serviceId) {
+      const found = await controller.repository.getById(serviceId);
+      if (found) controller.selectService(serviceId);
+    }
+  }
+  controller.subscribe(render); render(); load(); return page;
 }
+

@@ -1,18 +1,34 @@
-import { serviceData } from '../../../data/mock/serviceData.js';
+import { astroBizMockRepository } from '../../shared/repositories/AstroBizMockRepository.js';
 import { ServiceRepository } from './ServiceRepository.js';
 
-const clone = (value) => structuredClone(value);
-
 export class MockServiceRepository extends ServiceRepository {
-  constructor(initialServices = serviceData) {
+  constructor() {
     super();
-    this.services = clone(initialServices);
+    this.store = astroBizMockRepository;
   }
 
-  async simulateLatency() { await new Promise((resolve) => window.setTimeout(resolve, 160)); }
-  async getAll() { await this.simulateLatency(); return clone(this.services); }
-  async getById(id) { await this.simulateLatency(); return clone(this.services.find((service) => service.id === id) || null); }
-  async create(service) { await this.simulateLatency(); const created = { ...clone(service), id: `svc-${Date.now()}` }; this.services = [created, ...this.services]; return clone(created); }
-  async update(id, service) { await this.simulateLatency(); const index = this.services.findIndex((record) => record.id === id); if (index === -1) throw new Error('Service not found'); this.services[index] = { ...this.services[index], ...clone(service), id }; return clone(this.services[index]); }
-  async setActive(id, active) { return this.update(id, { active }); }
+  async getAll() {
+    return this.store.getServices();
+  }
+
+  async getById(id) {
+    return this.store.getServiceById(id);
+  }
+
+  async create(service) {
+    const created = { ...service, id: service.id || `svc-${Date.now()}` };
+    this.store.data.services = [created, ...this.store.data.services];
+    return structuredClone(created);
+  }
+
+  async update(id, service) {
+    const index = this.store.data.services.findIndex((record) => record.id === id);
+    if (index === -1) throw new Error('Service not found');
+    this.store.data.services[index] = { ...this.store.data.services[index], ...service, id };
+    return structuredClone(this.store.data.services[index]);
+  }
+
+  async setActive(id, active) {
+    return this.update(id, { active });
+  }
 }

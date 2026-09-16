@@ -27,27 +27,29 @@ export function customersPage({ onNavigate = defaultNavigation } = {}) {
   });
 }
 
-export function kundalisPage({ customerId = null, onNavigate = defaultNavigation } = {}) {
+export function kundalisPage({ customerId = null, kundaliId = null, onNavigate = defaultNavigation } = {}) {
   return Kundalis({
     customerId,
+    kundaliId,
     onNavigate: (path, state) => onNavigate(path, state),
   });
 }
 
-export function appointmentsPage() {
-  return Appointments();
+export function appointmentsPage({ customerId = null, appointmentId = null, onNavigate = defaultNavigation } = {}) {
+  return Appointments({ customerId, appointmentId, onNavigate: (path, state) => onNavigate(path, state) });
 }
 
-export function servicesPage() {
-  return Services();
+export function servicesPage({ serviceId = null, onNavigate = defaultNavigation } = {}) {
+  return Services({ serviceId, onNavigate: (path, state) => onNavigate(path, state) });
 }
 
-export function billingPage() {
-  return Billing();
+export function billingPage({ customerId = null, invoiceId = null, onNavigate = defaultNavigation } = {}) {
+  return Billing({ customerId, invoiceId, onNavigate });
 }
 
-export function crmPage({ onNavigate = defaultNavigation } = {}) {
+export function crmPage({ customerId = null, onNavigate = defaultNavigation } = {}) {
   return CRM({
+    customerId,
     onNavigate: (path, state) => onNavigate(path, state),
   });
 }

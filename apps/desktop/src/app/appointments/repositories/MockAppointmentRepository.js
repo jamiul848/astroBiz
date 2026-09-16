@@ -1,19 +1,33 @@
-import { appointmentData } from '../../../data/mock/appointmentData.js';
+import { astroBizMockRepository } from '../../shared/repositories/AstroBizMockRepository.js';
 import { AppointmentRepository } from './AppointmentRepository.js';
 
-const clone = (value) => structuredClone(value);
-
 export class MockAppointmentRepository extends AppointmentRepository {
-  constructor(initialAppointments = appointmentData) {
+  constructor() {
     super();
-    this.appointments = clone(initialAppointments);
+    this.store = astroBizMockRepository;
   }
 
-  async simulateLatency() { await new Promise((resolve) => window.setTimeout(resolve, 160)); }
-  async getAll() { await this.simulateLatency(); return clone(this.appointments); }
-  async getById(id) { await this.simulateLatency(); return clone(this.appointments.find((appointment) => appointment.id === id) || null); }
-  async getByCustomerId(customerId) { await this.simulateLatency(); return clone(this.appointments.filter((appointment) => appointment.customerId === customerId)); }
-  async create(appointment) { await this.simulateLatency(); const created = { ...clone(appointment), id: `apt-${Date.now()}` }; this.appointments = [created, ...this.appointments]; return clone(created); }
-  async update(id, appointment) { await this.simulateLatency(); const index = this.appointments.findIndex((record) => record.id === id); if (index === -1) throw new Error('Appointment not found'); this.appointments[index] = { ...this.appointments[index], ...clone(appointment), id }; return clone(this.appointments[index]); }
-  async cancel(id) { return this.update(id, { status: 'Cancelled' }); }
+  async getAll() {
+    return this.store.getAppointments();
+  }
+
+  async getById(id) {
+    return this.store.getAppointmentById(id);
+  }
+
+  async getByCustomerId(customerId) {
+    return this.store.getAppointmentsByCustomerId(customerId);
+  }
+
+  async create(appointment) {
+    return this.store.createAppointment(appointment);
+  }
+
+  async update(id, appointment) {
+    return this.store.updateAppointment(id, appointment);
+  }
+
+  async cancel(id) {
+    return this.store.updateAppointment(id, { status: 'Cancelled' });
+  }
 }

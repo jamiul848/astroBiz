@@ -11,15 +11,19 @@
 .billing-list-heading h2 { font-size: var(--font-size-lg); }
 .billing-list-heading span { color: var(--text-secondary); font-size: var(--font-size-xs); }
 .invoice-list-table { table-layout: fixed; }
-.invoice-list-table th:first-child, .invoice-list-table td:first-child { width: 16%; }
-.invoice-list-table th:nth-child(2), .invoice-list-table td:nth-child(2) { width: 15%; }
-.invoice-list-table th:nth-child(3), .invoice-list-table td:nth-child(3) { width: 16%; }
-.invoice-list-table th:nth-child(4), .invoice-list-table td:nth-child(4) { width: 11%; }
+.invoice-list-table th:first-child, .invoice-list-table td:first-child { width: 14%; }
+.invoice-list-table th:nth-child(2), .invoice-list-table td:nth-child(2) { width: 13%; }
+.invoice-list-table th:nth-child(3), .invoice-list-table td:nth-child(3) { width: 14%; }
+.invoice-list-table th:nth-child(4), .invoice-list-table td:nth-child(4) { width: 13%; }
 .invoice-list-table th:nth-child(5), .invoice-list-table td:nth-child(5) { width: 10%; }
-.invoice-list-table th:nth-child(6), .invoice-list-table td:nth-child(6) { width: 13%; }
-.invoice-list-table th:nth-child(7), .invoice-list-table td:nth-child(7) { width: 10%; }
-.invoice-list-table th:last-child, .invoice-list-table td:last-child { width: 9%; }
+.invoice-list-table th:nth-child(6), .invoice-list-table td:nth-child(6) { width: 10%; }
+.invoice-list-table th:nth-child(7), .invoice-list-table td:nth-child(7) { width: 12%; }
+.invoice-list-table th:last-child, .invoice-list-table td:last-child { width: 14%; }
 .invoice-list-table td { vertical-align: middle; }
+.invoice-list-no-apt { color: var(--text-tertiary); font-size: var(--font-size-sm); }
+.invoice-relationship-link { color: var(--color-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); text-decoration: underline; text-underline-offset: 2px; transition: color var(--transition-fast); }
+.invoice-relationship-link:hover { color: var(--color-accent); }
+.invoice-detail-muted { color: var(--text-tertiary) !important; font-style: italic; }
 .invoice-number-cell { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
 .invoice-number-cell strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .invoice-row-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }

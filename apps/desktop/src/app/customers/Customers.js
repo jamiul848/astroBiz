@@ -91,9 +91,13 @@ export function Customers({ onNavigate }) {
       resultsMeta.classList.add('hidden');
       listContainer.replaceChildren(CustomerDetails({
         customer: state.selectedCustomer,
+        relationships: state.customerRelationships,
         onBack: () => controller.clearSelection(),
         onEdit: () => createCustomerModal(controller, state.selectedCustomer, render),
-        onViewKundali: () => onNavigate('kundalis', state.selectedCustomer.id),
+        onViewKundali: (kundaliId) => onNavigate('kundalis', { customerId: state.selectedCustomer.id, kundaliId }),
+        onViewAppointment: (appointmentId) => onNavigate('appointments', { customerId: state.selectedCustomer.id, appointmentId }),
+        onViewInvoice: (invoiceId) => onNavigate('billing', { customerId: state.selectedCustomer.id, invoiceId }),
+        onViewCRM: () => onNavigate('crm', { customerId: state.selectedCustomer.id }),
       }));
       return;
     }

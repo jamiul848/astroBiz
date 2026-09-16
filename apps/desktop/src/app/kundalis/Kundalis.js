@@ -7,7 +7,8 @@ import { KundaliDetails } from './components/KundaliDetails.js';
 import { KundaliList } from './components/KundaliList.js';
 import { MockKundaliRepository } from './repositories/MockKundaliRepository.js';
 
-export function Kundalis({ customerId = null }) {
+export function Kundalis({ customerId = null, kundaliId = null, onNavigate = null }) {
+  const navigate = onNavigate || (() => false);
   const customerController = new CustomerController(new MockCustomerRepository());
   const controller = new KundaliController(new MockKundaliRepository(), customerController.repository);
   const page = document.createElement('div');
@@ -20,18 +21,38 @@ export function Kundalis({ customerId = null }) {
   content.className = 'page-content kundalis-content';
   page.appendChild(content);
 
+  let loadedByCustomer = false;
+
   function render() {
     const state = controller.state;
     if (state.loading) { content.replaceChildren(new LoadingState({ message: 'Loading Kundali data...', className: 'kundali-loading' }).render()); return; }
     if (state.error) { content.replaceChildren(new ErrorState({ title: 'Unable to load Kundali data', message: state.error, retry: new Button({ label: 'Try again', variant: 'secondary', onClick: () => load() }) }).render()); return; }
-    if (state.selectedKundali) { content.replaceChildren(KundaliDetails({ kundali: state.selectedKundali, onBack: () => controller.clearSelection() })); return; }
-    if (customerId) { content.replaceChildren(new EmptyState({ icon: '○', title: 'No Kundali available', message: 'This customer does not have a Kundali record yet.' }).render()); return; }
+    if (state.selectedKundali) {
+      content.replaceChildren(KundaliDetails({
+        kundali: state.selectedKundali,
+        onBack: () => controller.clearSelection(),
+        onViewCustomer: (id) => navigate('customers', { customerId: id }),
+      }));
+      return;
+    }
+    if (loadedByCustomer && !state.kundalis.length) {
+      content.replaceChildren(new EmptyState({ icon: '○', title: 'No Kundali available', message: 'This customer does not have a Kundali record yet.' }).render());
+      return;
+    }
     content.replaceChildren(KundaliList({ kundalis: state.kundalis, onSelect: (id) => controller.selectById(id) }));
   }
 
   async function load() {
-    if (customerId) await controller.selectByCustomerId(customerId);
-    else await controller.load();
+    if (kundaliId) {
+      await controller.selectById(kundaliId);
+      return;
+    }
+    if (customerId) {
+      loadedByCustomer = true;
+      await controller.selectByCustomerId(customerId);
+    } else {
+      await controller.load();
+    }
   }
   controller.subscribe(render);
   render();

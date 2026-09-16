@@ -15,7 +15,7 @@ function detailItem(label, value) {
   return item;
 }
 
-export function CustomerDetails({ customer, onBack, onEdit, onViewKundali }) {
+export function CustomerDetails({ customer, relationships = { kundalis: [], appointments: [], invoices: [], activities: [], followUps: [] }, onBack, onEdit, onViewKundali, onViewAppointment, onViewInvoice, onViewCRM }) {
   const content = document.createElement('div');
   content.className = 'customer-details-content';
 
@@ -31,7 +31,10 @@ export function CustomerDetails({ customer, onBack, onEdit, onViewKundali }) {
   actions.className = 'customer-details-actions';
   actions.appendChild(new Button({ label: 'Back to customers', variant: 'secondary', onClick: onBack }).render());
   actions.appendChild(new Button({ label: 'Edit customer', variant: 'primary', onClick: onEdit }).render());
-  actions.appendChild(new Button({ label: 'View Kundali', variant: 'accent', onClick: onViewKundali }).render());
+  if (relationships.kundalis.length) {
+    actions.appendChild(new Button({ label: 'View Kundali', variant: 'accent', onClick: () => onViewKundali(relationships.kundalis[0].id) }).render());
+  }
+  actions.appendChild(new Button({ label: 'CRM timeline', variant: 'secondary', onClick: onViewCRM }).render());
   summary.appendChild(actions);
   content.appendChild(summary);
 
@@ -42,6 +45,78 @@ export function CustomerDetails({ customer, onBack, onEdit, onViewKundali }) {
   detailGrid.appendChild(new Card({ title: 'Location', content: (() => { const group = document.createElement('div'); group.className = 'customer-info-list'; group.append(detailItem('Latitude', customer.latitude), detailItem('Longitude', customer.longitude), detailItem('Timezone', customer.timezone)); return group; })(), className: 'customer-detail-card' }).render());
   detailGrid.appendChild(new Card({ title: 'Notes', content: (() => { const note = document.createElement('p'); note.className = 'customer-notes'; note.textContent = customer.notes || 'No notes added yet.'; return note; })(), className: 'customer-detail-card' }).render());
   content.appendChild(detailGrid);
+
+  const relationshipSections = document.createElement('div');
+  relationshipSections.className = 'customer-relationship-sections';
+
+  const buildRelationshipList = (items, emptyMessage, keyLabel, onItemClick) => {
+    const list = document.createElement('div');
+    list.className = 'customer-relationship-list';
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.className = 'customer-relationship-empty';
+      empty.textContent = emptyMessage;
+      list.appendChild(empty);
+      return list;
+    }
+
+    items.slice(0, 5).forEach((item) => {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'customer-relationship-row';
+      row.innerHTML = `<span>${item.title || item.name || item.invoiceNumber || item.type || item.id}</span><strong>${item.date || item.invoiceDate || item.status || item.label || item.customerName || keyLabel}</strong>`;
+      row.addEventListener('click', () => onItemClick(item));
+      list.appendChild(row);
+    });
+    return list;
+  };
+
+  const kundalisSection = new Card({
+    title: 'Kundalis',
+    content: buildRelationshipList(
+      relationships.kundalis,
+      'No kundalis linked to this customer yet.',
+      'Kundali',
+      (item) => onViewKundali(item.id)
+    ),
+    className: 'customer-detail-card',
+  }).render();
+
+  const appointmentsSection = new Card({
+    title: 'Appointments',
+    content: buildRelationshipList(
+      relationships.appointments,
+      'No appointments linked to this customer yet.',
+      'Appointment',
+      (item) => onViewAppointment(item.id)
+    ),
+    className: 'customer-detail-card',
+  }).render();
+
+  const invoicesSection = new Card({
+    title: 'Invoices',
+    content: buildRelationshipList(
+      relationships.invoices,
+      'No invoices linked to this customer yet.',
+      'Invoice',
+      (item) => onViewInvoice(item.id)
+    ),
+    className: 'customer-detail-card',
+  }).render();
+
+  const crmSection = new Card({
+    title: 'CRM activities',
+    content: buildRelationshipList(
+      [...relationships.followUps, ...relationships.activities].slice(0, 6),
+      'No CRM history for this customer yet.',
+      'CRM',
+      () => onViewCRM()
+    ),
+    className: 'customer-detail-card',
+  }).render();
+
+  relationshipSections.append(kundalisSection, appointmentsSection, invoicesSection, crmSection);
+  content.appendChild(relationshipSections);
 
   return content;
 }

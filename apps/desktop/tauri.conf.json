@@ -26,6 +26,9 @@
     }
   },
   "bundle": {
-    "active": false
+    "active": false,
+    "icon": [
+      "src-tauri/icons/icon.ico"
+    ]
   }
 }

@@ -13,7 +13,7 @@ function detail(label, value) {
   return item;
 }
 
-export function KundaliDetails({ kundali, onBack }) {
+export function KundaliDetails({ kundali, onBack, onViewCustomer }) {
   const page = document.createElement('div');
   page.className = 'kundali-details-content';
   const summary = document.createElement('div');
@@ -21,7 +21,29 @@ export function KundaliDetails({ kundali, onBack }) {
   summary.appendChild(new Avatar({ name: kundali.customerName, size: 'lg', color: kundali.avatarColor || 'accent' }).render());
   const heading = document.createElement('div');
   heading.className = 'kundali-summary-heading';
-  heading.innerHTML = `<p class="kundali-eyebrow">Kundali detail</p><h2>${kundali.customerName}</h2><p>Updated ${kundali.updatedAt}</p>`;
+  heading.innerHTML = `<p class="kundali-eyebrow">Kundali detail</p><h2>${kundali.title || kundali.customerName}</h2><p>Updated ${kundali.updatedAt}</p>`;
+
+  // Clickable customer link
+  const customerRow = document.createElement('p');
+  customerRow.className = 'kundali-customer-row';
+  const customerLabel = document.createElement('span');
+  customerLabel.textContent = 'Customer: ';
+  customerRow.appendChild(customerLabel);
+  if (kundali.customerId && kundali.customerName && kundali.customerName !== 'Unknown customer' && onViewCustomer) {
+    const link = document.createElement('a');
+    link.href = '#';
+    link.className = 'kundali-customer-link';
+    link.textContent = kundali.customerName;
+    link.addEventListener('click', (event) => { event.preventDefault(); onViewCustomer(kundali.customerId); });
+    customerRow.appendChild(link);
+  } else {
+    const fallback = document.createElement('strong');
+    fallback.className = 'kundali-customer-unavailable';
+    fallback.textContent = kundali.customerName || 'Customer unavailable';
+    customerRow.appendChild(fallback);
+  }
+  heading.appendChild(customerRow);
+
   summary.appendChild(heading);
   summary.appendChild(new StatusBadge({ label: 'Ready', status: 'success' }).render());
   const actions = document.createElement('div');

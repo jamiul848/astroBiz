@@ -53,7 +53,8 @@ function createAppointmentModal(controller, appointment, onComplete) {
   modal.show();
 }
 
-export function Appointments() {
+export function Appointments({ customerId = null, appointmentId = null, onNavigate = null } = {}) {
+  const navigate = onNavigate || (() => false);
   const customerController = new CustomerController(new MockCustomerRepository());
   const controller = new AppointmentController(new MockAppointmentRepository(), customerController.repository, serviceRepository);
   const page = document.createElement('div');
@@ -80,7 +81,17 @@ export function Appointments() {
     const state = controller.state;
     if (state.loading) { content.replaceChildren(new LoadingState({ message: 'Loading appointments...', className: 'appointments-loading' }).render()); return; }
     if (state.error) { content.replaceChildren(new ErrorState({ title: 'Unable to load appointments', message: state.error, retry: new Button({ label: 'Try again', variant: 'secondary', onClick: () => controller.load() }) }).render()); return; }
-    if (state.selectedAppointment) { content.replaceChildren(AppointmentDetails({ appointment: state.selectedAppointment, onBack: () => controller.clearSelection(), onEdit: () => createAppointmentModal(controller, state.selectedAppointment, render), onCancel: () => cancelAppointment(state.selectedAppointment.id) })); return; }
+    if (state.selectedAppointment) {
+      content.replaceChildren(AppointmentDetails({
+        appointment: state.selectedAppointment,
+        onBack: () => controller.clearSelection(),
+        onEdit: () => createAppointmentModal(controller, state.selectedAppointment, render),
+        onCancel: () => cancelAppointment(state.selectedAppointment.id),
+        onViewCustomer: (id) => navigate('customers', { customerId: id }),
+        onViewService: () => navigate('services'),
+      }));
+      return;
+    }
 
     content.replaceChildren();
     const controls = document.createElement('div'); controls.className = 'appointments-controls';
@@ -96,8 +107,29 @@ export function Appointments() {
     const visibleAppointments = getVisibleAppointments();
     content.appendChild(AppointmentCalendar({ view: state.view, currentDate: state.currentDate, appointments: controller.getEnrichedAppointments(), onSelect: (id) => controller.selectAppointment(id) }));
     const listHeading = document.createElement('div'); listHeading.className = 'appointments-list-heading'; listHeading.innerHTML = `<h2>Appointment list</h2><span>${visibleAppointments.length} in this view</span>`; content.appendChild(listHeading);
-    content.appendChild(AppointmentList({ appointments: visibleAppointments, onSelect: (id) => controller.selectAppointment(id), onEdit: async (id) => createAppointmentModal(controller, await controller.resolveAppointment(await controller.repository.getById(id)), render), onCancel: cancelAppointment }));
+    content.appendChild(AppointmentList({
+      appointments: visibleAppointments,
+      onSelect: (id) => controller.selectAppointment(id),
+      onEdit: async (id) => createAppointmentModal(controller, await controller.resolveAppointment(await controller.repository.getById(id)), render),
+      onCancel: cancelAppointment,
+      onViewCustomer: (id) => navigate('customers', { customerId: id }),
+    }));
   }
 
-  controller.subscribe(render); render(); controller.load(); return page;
+  async function load() {
+    await controller.load();
+    if (appointmentId) {
+      const found = await controller.repository.getById(appointmentId);
+      if (found) {
+        await controller.selectAppointment(appointmentId);
+      }
+    } else if (customerId) {
+      const related = await controller.repository.getByCustomerId(customerId);
+      if (related.length) {
+        await controller.selectAppointment(related[0].id);
+      }
+    }
+  }
+
+  controller.subscribe(render); render(); load(); return page;
 }

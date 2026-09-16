@@ -5,12 +5,22 @@ import { Table } from '../../../shared/components/Table.js';
 
 const statusTypes = { Pending: 'warning', Confirmed: 'success', Completed: 'success', Cancelled: 'danger', 'No Show': 'neutral' };
 
-export function AppointmentList({ appointments, onSelect, onEdit, onCancel }) {
+export function AppointmentList({ appointments, onSelect, onEdit, onCancel, onViewCustomer }) {
   if (!appointments.length) return new EmptyState({ icon: '○', title: 'No appointments in this period', message: 'Try another date or create a new appointment.' }).render();
   const table = new Table({ columns: [{ key: 'customerName', label: 'Customer' }, { key: 'serviceName', label: 'Service' }, { key: 'date', label: 'Date' }, { key: 'time', label: 'Time' }, { key: 'status', label: 'Status' }, { key: 'actions', label: '' }], rows: appointments.map((appointment) => ({ ...appointment, time: `${appointment.startTime} - ${appointment.endTime}`, actions: 'View' })), className: 'appointment-list-table' }).render();
   table.querySelectorAll('tbody tr').forEach((row, index) => {
     const appointment = appointments[index];
     const cells = row.querySelectorAll('td');
+    
+    cells[0].textContent = '';
+    const customerLink = document.createElement('button');
+    customerLink.className = 'link-button';
+    customerLink.textContent = appointment.customerName || 'Unknown customer';
+    if (appointment.customerId && onViewCustomer) {
+      customerLink.onclick = (e) => { e.stopPropagation(); onViewCustomer(appointment.customerId); };
+    }
+    cells[0].appendChild(customerLink);
+
     cells[4].textContent = '';
     cells[4].appendChild(new StatusBadge({ label: appointment.status, status: statusTypes[appointment.status] }).render());
     cells[5].textContent = '';

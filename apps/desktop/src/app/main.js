@@ -49,12 +49,27 @@ class App {
       }))
       .register('kundalis', (state) => kundalisPage({
         customerId: state?.customerId ?? state ?? null,
+        kundaliId: state?.kundaliId ?? null,
         onNavigate: (path, routeState) => navigate(path, routeState),
       }))
-      .register('appointments', (state) => appointmentsPage())
-      .register('services', (state) => servicesPage())
-      .register('billing', (state) => billingPage())
-      .register('crm', (state) => crmPage())
+      .register('appointments', (state) => appointmentsPage({
+        customerId: state?.customerId ?? null,
+        appointmentId: state?.appointmentId ?? null,
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('services', (state) => servicesPage({
+        serviceId: state?.serviceId ?? null,
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('billing', (state) => billingPage({
+        customerId: state?.customerId ?? null,
+        invoiceId: state?.invoiceId ?? null,
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
+      .register('crm', (state) => crmPage({
+        customerId: state?.customerId ?? null,
+        onNavigate: (path, routeState) => navigate(path, routeState),
+      }))
       .register('reports', (state) => reportsPage())
       .register('settings', (state) => settingsPage());
   }

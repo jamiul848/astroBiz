@@ -26,7 +26,7 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString();
 }
 
-export function CRM({ onNavigate = () => {} }) {
+export function CRM({ customerId = null, onNavigate = () => {} } = {}) {
   const controller = new CRMController(new MockCRMRepository());
   const page = document.createElement('div');
   page.className = 'page crm-page';
@@ -187,8 +187,15 @@ export function CRM({ onNavigate = () => {} }) {
     content.appendChild(listSection);
   }
 
+  async function load() {
+    await controller.load();
+    if (customerId) {
+      await controller.selectCustomer(customerId);
+    }
+  }
+
   controller.subscribe(render);
   render();
-  controller.load();
+  load();
   return page;
 }

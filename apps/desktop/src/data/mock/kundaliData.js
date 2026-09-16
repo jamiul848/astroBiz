@@ -1,6 +1,6 @@
 export const kundaliData = [
   {
-    id: 'kundali-2001', customerId: 'cus-1001', createdAt: '12 Jun 2024', updatedAt: '12 Jun 2024',
+    id: 'kundali-2001', customerId: 'cus-1001', title: 'Birth Chart', createdAt: '12 Jun 2024', updatedAt: '12 Jun 2024',
     birthInformation: { dateOfBirth: '1991-04-18', timeOfBirth: '08:45', birthPlace: 'Pune, Maharashtra', latitude: '18.5204', longitude: '73.8567', timezone: 'Asia/Kolkata' },
     chart: { title: 'North Indian chart', cells: ['Ascendant', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], center: 'Chart data supplied by astrology service' },
     planetaryPositions: [
@@ -23,7 +23,20 @@ export const kundaliData = [
     report: { title: 'Professional summary', summary: 'A steady chart profile with a strong focus on communication, learning, and practical growth. This demo interpretation is supplied as report content and is not generated in the frontend.', highlights: ['Strong communication focus', 'Practical approach to growth', 'Review relationship compatibility with a paired chart'] },
   },
   {
-    id: 'kundali-2002', customerId: 'cus-1003', createdAt: '08 Jun 2024', updatedAt: '09 Jun 2024',
+    id: 'kundali-2002', customerId: 'cus-1001', title: 'Quarterly Update', createdAt: '20 Jun 2024', updatedAt: '20 Jun 2024',
+    birthInformation: { dateOfBirth: '1991-04-18', timeOfBirth: '08:45', birthPlace: 'Pune, Maharashtra', latitude: '18.5204', longitude: '73.8567', timezone: 'Asia/Kolkata' },
+    chart: { title: 'Secondary chart', cells: ['Ascendant', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], center: 'Follow-up chart for next quarter' },
+    planetaryPositions: [
+      { planet: 'Sun', sign: 'Aries', degree: '02° 10\'', house: '1', nakshatra: 'Ashwini', status: 'Direct' },
+      { planet: 'Moon', sign: 'Cancer', degree: '20° 42\'', house: '4', nakshatra: 'Ashlesha', status: 'Direct' },
+    ],
+    nakshatra: { name: 'Magha', pada: 'Pada 3', lord: 'Ketu', moonSign: 'Leo' },
+    dashas: [{ name: 'Venus', startDate: '12 May 2024', endDate: '12 May 2034', status: 'Current', antardashas: [] }],
+    doshas: [{ name: 'Nadi Dosha', status: 'Review recommended', severity: 'Medium', description: 'Compatibility review recommended with partner chart.' }],
+    report: { title: 'Quarterly update', summary: 'The second reading revisits timing and long-term career decisions with updated progress.', highlights: ['Career alignment', 'Timing review', 'Potential partner compatibility check'] },
+  },
+  {
+    id: 'kundali-2003', customerId: 'cus-1003', title: 'Birth Chart', createdAt: '08 Jun 2024', updatedAt: '09 Jun 2024',
     birthInformation: { dateOfBirth: '1994-01-26', timeOfBirth: '06:10', birthPlace: 'New Delhi, Delhi', latitude: '28.6139', longitude: '77.2090', timezone: 'Asia/Kolkata' },
     chart: { title: 'North Indian chart', cells: ['Ascendant', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'], center: 'Chart data supplied by astrology service' },
     planetaryPositions: [

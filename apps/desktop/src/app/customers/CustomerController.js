@@ -1,3 +1,8 @@
+import { MockAppointmentRepository } from '../appointments/repositories/MockAppointmentRepository.js';
+import { MockInvoiceRepository } from '../billing/repositories/MockInvoiceRepository.js';
+import { MockCRMRepository } from '../crm/repositories/MockCRMRepository.js';
+import { MockKundaliRepository } from '../kundalis/repositories/MockKundaliRepository.js';
+
 export class CustomerController {
   constructor(repository) {
     this.repository = repository;
@@ -6,6 +11,13 @@ export class CustomerController {
       searchQuery: '',
       statusFilter: 'all',
       selectedCustomer: null,
+      customerRelationships: {
+        kundalis: [],
+        appointments: [],
+        invoices: [],
+        activities: [],
+        followUps: [],
+      },
       loading: false,
       error: null,
     };
@@ -57,11 +69,32 @@ export class CustomerController {
   async selectCustomer(id) {
     const customer = await this.repository.getById(id);
     this.setState({ selectedCustomer: customer });
+    await this.loadCustomerRelationships(id);
     return customer;
   }
 
+  async loadCustomerRelationships(customerId) {
+    const [kundalis, appointments, invoices, activities, followUps] = await Promise.all([
+      new MockKundaliRepository().getByCustomerId(customerId),
+      new MockAppointmentRepository().getByCustomerId(customerId),
+      new MockInvoiceRepository().getByCustomerId(customerId),
+      new MockCRMRepository().getActivitiesForCustomer(customerId),
+      new MockCRMRepository().getFollowUpsForCustomer(customerId),
+    ]);
+
+    this.setState({
+      customerRelationships: {
+        kundalis,
+        appointments,
+        invoices,
+        activities,
+        followUps,
+      },
+    });
+  }
+
   clearSelection() {
-    this.setState({ selectedCustomer: null });
+    this.setState({ selectedCustomer: null, customerRelationships: { kundalis: [], appointments: [], invoices: [], activities: [], followUps: [] } });
   }
 
   async createCustomer(customer) {

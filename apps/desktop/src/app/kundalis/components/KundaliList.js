@@ -10,13 +10,14 @@ export function KundaliList({ kundalis, onSelect }) {
   const table = new Table({
     columns: [
       { key: 'customerName', label: 'Customer' },
+      { key: 'title', label: 'Title' },
       { key: 'birthDate', label: 'Birth date' },
       { key: 'birthPlace', label: 'Birth place' },
       { key: 'createdAt', label: 'Created' },
       { key: 'status', label: 'Availability' },
       { key: 'action', label: '' },
     ],
-    rows: kundalis.map((kundali) => ({ ...kundali, birthDate: kundali.birthInformation.dateOfBirth, birthPlace: kundali.birthInformation.birthPlace, status: 'Ready', action: 'Open' })),
+    rows: kundalis.map((kundali) => ({ ...kundali, title: kundali.title || 'Kundali', birthDate: kundali.birthInformation.dateOfBirth, birthPlace: kundali.birthInformation.birthPlace, status: 'Ready', action: 'Open' })),
     className: 'kundali-list-table',
   }).render();
   table.querySelectorAll('tbody tr').forEach((row, index) => {
@@ -30,10 +31,10 @@ export function KundaliList({ kundalis, onSelect }) {
     name.textContent = kundali.customerName;
     identity.appendChild(name);
     cells[0].appendChild(identity);
-    cells[4].textContent = '';
-    cells[4].appendChild(new StatusBadge({ label: 'Ready', status: 'success' }).render());
     cells[5].textContent = '';
-    cells[5].appendChild(new Button({ label: 'Open', variant: 'secondary', size: 'sm', onClick: () => onSelect(kundali.id) }).render());
+    cells[5].appendChild(new StatusBadge({ label: 'Ready', status: 'success' }).render());
+    cells[6].textContent = '';
+    cells[6].appendChild(new Button({ label: 'Open', variant: 'secondary', size: 'sm', onClick: () => onSelect(kundali.id) }).render());
   });
   return table;
 }
